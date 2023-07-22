@@ -6,12 +6,14 @@ import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 
 const PromptCard = ({ post, handleTagClick, handleDelete, handleEdit }) => {
+  const { data: session } = useSession();
+
   return (
     <div className="prompt-card">
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
           <Image
-            src="/assets/images/logo.svg"
+            src={session.user.image}
             alt="user image"
             width={40}
             height={40}

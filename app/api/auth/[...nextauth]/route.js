@@ -16,21 +16,10 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt(token, account) {
-      if (account) {
-        token.accessToken = account.accessToken;
-      }
-      return token;
-    },
-
     async session({ session, token, trigger, newSession }) {
       const sessionUser = await User.findOne({ email: session.user.email });
 
-      // session.user.id = sessionUser._id.toString();
-      // session.accessToken = token.accessToken;
-      if (trigger === 'update' && newSession?.name) {
-        session.name = newSession.name;
-      }
+      session.user.id = sessionUser._id.toString();
 
       return session;
     },
@@ -43,7 +32,7 @@ const handler = NextAuth({
 
         // if not, create a new user and save it to the database
         if (!userExists) {
-          await User.create({
+          const newUser = await User.create({
             email: profile.email,
             username: profile.name.replace(' ', '').toLowerCase(),
             image: profile.image,
